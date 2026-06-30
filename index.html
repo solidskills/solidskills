@@ -1,420 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>solidskills — LLM skills for the Solid ecosystem</title>
-<meta name="description" content="LLM skills for the Solid ecosystem. Grounded in working code, not theory. Protocol, Solid-OIDC, Servers, SolidOS, and Web Access Control." />
-<meta property="og:title" content="solidskills" />
-<meta property="og:description" content="LLM skills for the Solid ecosystem. Grounded in working code, not theory." />
-<meta property="og:type" content="website" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg: #fbfbfd;
-    --surface: #ffffff;
-    --border: #e8e8ef;
-    --border-strong: #dcdce6;
-    --ink: #14141f;
-    --ink-soft: #4a4a5c;
-    --muted: #8888a0;
-    --accent: #6d4aff;
-    --accent-2: #9b5cff;
-    --accent-soft: #f1edff;
-    --ring: rgba(109, 74, 255, 0.28);
-    --shadow-sm: 0 1px 2px rgba(20, 20, 31, 0.04), 0 1px 3px rgba(20, 20, 31, 0.06);
-    --shadow-lg: 0 18px 40px -18px rgba(76, 51, 173, 0.35), 0 8px 16px -12px rgba(20, 20, 31, 0.12);
-    --radius: 18px;
-    --maxw: 1140px;
-    --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solid Skills — LLM Skills for the Solid Ecosystem</title>
+  <meta name="description" content="Grounded LLM skills for building Solid apps. Protocol, WebACL, and more — from working code, not theory.">
+  <link rel="canonical" href="https://solidskills.github.io/">
 
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    font-family: var(--font);
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-  a { color: inherit; text-decoration: none; }
+  <!-- Open Graph -->
+  <meta property="og:title" content="Solid Skills">
+  <meta property="og:description" content="LLM skills for the Solid ecosystem — grounded in working code, not theory.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://solidskills.github.io">
+  <meta property="og:image" content="https://solidskills.github.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Solid Skills — LLM skills for Protocol, Solid-OIDC, SolidOS, WebACL">
 
-  /* Decorative background */
-  .glow {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-    pointer-events: none;
-  }
-  .glow::before,
-  .glow::after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(90px);
-    opacity: 0.55;
-  }
-  .glow::before {
-    width: 620px; height: 620px;
-    top: -240px; left: 50%;
-    transform: translateX(-55%);
-    background: radial-gradient(circle at 30% 30%, #c8b6ff, transparent 65%);
-  }
-  .glow::after {
-    width: 520px; height: 520px;
-    top: 120px; right: -160px;
-    background: radial-gradient(circle at 60% 40%, #ffd9f0, transparent 60%);
-    opacity: 0.45;
-  }
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Solid Skills">
+  <meta name="twitter:description" content="LLM skills for the Solid ecosystem — grounded in working code, not theory.">
+  <meta name="twitter:image" content="https://solidskills.github.io/og-image.png">
 
-  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #fafaf8;
+      color: #2c2c2c;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
 
-  /* Nav */
-  header.nav {
-    position: sticky; top: 0; z-index: 50;
-    backdrop-filter: saturate(180%) blur(14px);
-    background: rgba(251, 251, 253, 0.72);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-inner {
-    display: flex; align-items: center; justify-content: space-between;
-    height: 64px;
-  }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
-  .brand .dot {
-    width: 26px; height: 26px; border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    box-shadow: 0 4px 12px -3px var(--ring);
-    display: grid; place-items: center;
-  }
-  .brand .dot svg { width: 15px; height: 15px; }
-  .nav-links { display: flex; align-items: center; gap: 8px; }
-  .nav-links a {
-    padding: 8px 14px; border-radius: 10px; font-size: 14px; font-weight: 500;
-    color: var(--ink-soft); transition: background .15s, color .15s;
-  }
-  .nav-links a:hover { background: var(--accent-soft); color: var(--accent); }
-  .nav-links a.primary {
-    background: var(--ink); color: #fff;
-  }
-  .nav-links a.primary:hover { background: #2a2a3c; color: #fff; }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
 
-  /* Hero */
-  .hero { padding: 78px 0 48px; text-align: center; }
-  .badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 14px; border-radius: 999px;
-    background: var(--surface); border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-    font-size: 13px; font-weight: 500; color: var(--ink-soft);
-    margin-bottom: 26px;
-  }
-  .badge .pip { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
-  .hero h1 {
-    font-size: clamp(38px, 6vw, 64px);
-    line-height: 1.04;
-    letter-spacing: -0.03em;
-    font-weight: 800;
-    margin: 0 0 20px;
-  }
-  .hero h1 .grad {
-    background: linear-gradient(120deg, var(--accent), var(--accent-2) 55%, #d36bd0);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .hero p.lede {
-    font-size: clamp(17px, 2.2vw, 20px);
-    color: var(--ink-soft);
-    max-width: 620px; margin: 0 auto 34px;
-  }
-  .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; align-items: center; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 9px;
-    padding: 13px 22px; border-radius: 12px; font-weight: 600; font-size: 15px;
-    transition: transform .12s ease, box-shadow .15s ease, background .15s;
-    border: 1px solid transparent;
-  }
-  .btn:active { transform: translateY(1px); }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #fff; box-shadow: 0 10px 24px -10px var(--ring);
-  }
-  .btn-primary:hover { box-shadow: 0 14px 30px -10px var(--ring); }
-  .btn-ghost {
-    background: var(--surface); color: var(--ink); border-color: var(--border-strong);
-    box-shadow: var(--shadow-sm);
-  }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .btn svg { width: 17px; height: 17px; }
+    header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: normal;
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.01em;
+    }
+    header .subtitle {
+      font-style: italic;
+      color: #666;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    header .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      font-size: 0.95rem;
+    }
+    header .links a {
+      color: #1a5276;
+      text-decoration: none;
+    }
+    header .links a:hover {
+      text-decoration: underline;
+    }
 
-  /* Install snippet */
-  .install {
-    margin: 30px auto 0; max-width: 380px;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow-sm);
-    font-family: var(--mono); font-size: 14px;
-  }
-  .install code { color: var(--ink); }
-  .install code .sigil { color: var(--accent); }
-  .copy-btn {
-    border: none; background: var(--accent-soft); color: var(--accent);
-    border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 12px; font-weight: 600;
-    cursor: pointer; transition: background .15s; font-family: var(--font);
-  }
-  .copy-btn:hover { background: #e6dfff; }
+    section {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #eee;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
 
-  /* Section heading */
-  .section { padding: 40px 0 20px; }
-  .section-head { text-align: center; margin-bottom: 38px; }
-  .section-head .eyebrow {
-    font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 10px;
-  }
-  .section-head h2 { font-size: clamp(26px, 4vw, 36px); letter-spacing: -0.02em; margin: 0 0 10px; font-weight: 800; }
-  .section-head p { color: var(--ink-soft); margin: 0 auto; max-width: 540px; font-size: 16px; }
+    h2 {
+      font-size: 1.5rem;
+      font-weight: normal;
+      margin-bottom: 1rem;
+    }
+    h3 {
+      font-size: 1.15rem;
+      font-style: italic;
+      font-weight: normal;
+      margin-bottom: 0.6rem;
+      margin-top: 1.5rem;
+    }
 
-  /* Cards grid */
-  .grid {
-    display: grid; gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    padding-bottom: 40px;
-  }
-  .card {
-    position: relative;
-    display: flex; flex-direction: column;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 26px 24px 22px;
-    box-shadow: var(--shadow-sm);
-    transition: transform .18s ease, box-shadow .2s ease, border-color .2s ease;
-    overflow: hidden;
-  }
-  .card::after {
-    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px;
-    background: linear-gradient(90deg, var(--c1), var(--c2));
-    opacity: 0; transition: opacity .2s ease;
-  }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: transparent;
-  }
-  .card:hover::after { opacity: 1; }
-  .card .icon {
-    width: 50px; height: 50px; border-radius: 14px;
-    display: grid; place-items: center; margin-bottom: 18px;
-    background: linear-gradient(135deg, var(--c1), var(--c2));
-    box-shadow: 0 8px 18px -8px var(--c2);
-  }
-  .card .icon svg { width: 25px; height: 25px; color: #fff; }
-  .card h3 { margin: 0 0 7px; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
-  .card p { margin: 0 0 18px; color: var(--ink-soft); font-size: 14.5px; flex: 1; }
-  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
-  .tag {
-    font-size: 11.5px; font-weight: 600; font-family: var(--mono);
-    padding: 4px 9px; border-radius: 7px;
-    background: #f4f4f8; color: var(--ink-soft); border: 1px solid var(--border);
-  }
-  .card .read {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 14px; font-weight: 600; color: var(--accent);
-  }
-  .card .read svg { width: 15px; height: 15px; transition: transform .18s ease; }
-  .card:hover .read svg { transform: translateX(3px); }
+    p {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
 
-  /* Features strip */
-  .features {
-    display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    margin: 30px 0 10px;
-  }
-  .feature {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-    padding: 22px; box-shadow: var(--shadow-sm);
-  }
-  .feature .fi {
-    width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
-    background: var(--accent-soft); color: var(--accent); margin-bottom: 14px;
-  }
-  .feature .fi svg { width: 20px; height: 20px; }
-  .feature h4 { margin: 0 0 6px; font-size: 16px; font-weight: 700; }
-  .feature p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+    code {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 0.85em;
+      background: #f0efeb;
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+    }
+    pre {
+      background: #f0efeb;
+      padding: 1.2rem 1.5rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+    }
 
-  /* Footer */
-  footer {
-    margin-top: 70px; border-top: 1px solid var(--border);
-    padding: 40px 0; background: var(--surface);
-  }
-  .foot-inner {
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 16px;
-  }
-  .foot-inner .brand { font-size: 15px; }
-  .foot-links { display: flex; gap: 20px; font-size: 14px; color: var(--ink-soft); }
-  .foot-links a:hover { color: var(--accent); }
-  .foot-note { width: 100%; font-size: 13px; color: var(--muted); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    .skill-card {
+      background: white;
+      border: 1px solid #e8e8e4;
+      border-radius: 6px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s ease;
+    }
+    .skill-card:hover {
+      border-color: #1a5276;
+    }
+    .skill-card h3 {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 0 0 0.5rem;
+      color: #1a5276;
+    }
+    .skill-card p {
+      font-size: 0.9rem;
+      color: #555;
+      margin: 0;
+    }
+    .skill-card .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      background: #f0efeb;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      color: #888;
+      margin-top: 0.8rem;
+      font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    }
 
-  @media (max-width: 560px) {
-    .hero { padding: 54px 0 36px; }
-    .nav-links a:not(.primary) { display: none; }
-  }
-</style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      font-weight: normal;
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .highlight {
+      background: #f0efeb;
+      padding: 1.2rem 1.5rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.85rem;
+      color: #999;
+      font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    }
+    footer a {
+      color: #1a5276;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 2rem 1.5rem; }
+      header h1 { font-size: 1.8rem; }
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-<div class="glow" aria-hidden="true"></div>
+  <div class="container">
+    <header>
+      <h1>Solid Skills</h1>
+      <p class="subtitle">Reference skills for AI agents and developers building Solid applications.<br>A curated, implementation-backed knowledge base of the Solid stack.</p>
+      <div class="links">
+        <a href="https://www.npmjs.com/package/solidskills">npm</a>
+        <a href="https://github.com/solidskills/solidskills">GitHub</a>
+        <a href="https://solidproject.org">Solid Project</a>
+        <a href="https://webacl.org">webacl.org</a>
+      </div>
+    </header>
 
-<header class="nav">
-  <div class="wrap nav-inner">
-    <a class="brand" href="#top">
-      <span class="dot">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
-      </span>
-      solidskills
-    </a>
-    <nav class="nav-links">
-      <a href="#skills">Skills</a>
-      <a href="https://www.npmjs.com/package/solidskills">npm</a>
-      <a class="primary" href="https://github.com/solidskills/solidskills">GitHub ↗</a>
-    </nav>
+    <section>
+      <h2>What is this?</h2>
+      <p>Solid Skills is a collection of Markdown skill files that give AI coding assistants the context they need to build Solid applications. Each skill covers one aspect of the Solid ecosystem with practical templates, examples, and reference tables.</p>
+      <p>Every skill is backed by working code — servers that run, apps that ship, specs that are implemented. Not documentation of documentation.</p>
+      <div class="highlight">
+        <pre><code>npm install solidskills</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <div class="skills-grid">
+        <a href="https://github.com/solidskills/solidskills/blob/gh-pages/skills/protocol.md" class="skill-card">
+          <h3>Protocol</h3>
+          <p>Solid Protocol, LDP containers, WebID profiles, HTTP API, content negotiation, conditional requests, PATCH operations, storage discovery.</p>
+          <span class="tag">HTTP &middot; LDP &middot; WebID</span>
+        </a>
+        <a href="https://github.com/solidskills/solidskills/blob/gh-pages/skills/solid-oidc.md" class="skill-card">
+          <h3>Solid-OIDC</h3>
+          <p>Authentication for Solid apps. Login, token refresh, DPoP proof-of-possession, PKCE, and authenticated fetch — zero dependencies.</p>
+          <span class="tag">Auth &middot; DPoP &middot; PKCE</span>
+        </a>
+        <a href="https://github.com/solidskills/solidskills/blob/gh-pages/skills/servers.md" class="skill-card">
+          <h3>Servers</h3>
+          <p>All major Solid server implementations — CSS, JSS, NSS, Pivot, ESS. Configuration, deployment, feature comparison, and live pod providers.</p>
+          <span class="tag">CSS &middot; JSS &middot; NSS &middot; Pivot</span>
+        </a>
+        <a href="https://github.com/solidskills/solidskills/blob/gh-pages/skills/solidos.md" class="skill-card">
+          <h3>SolidOS</h3>
+          <p>Data browser for Solid pods. Pane architecture, rdflib.js, type index, solid-ui widgets, embedding, and development setup.</p>
+          <span class="tag">Panes &middot; rdflib &middot; Data Browser</span>
+        </a>
+        <a href="https://github.com/solidskills/solidskills/blob/gh-pages/skills/webacl.md" class="skill-card">
+          <h3>WebACL</h3>
+          <p>Web Access Control for Solid pods. Generate .acl files in Turtle or JSON-LD with 7 ready-to-use templates covering common access patterns.</p>
+          <span class="tag">ACL &middot; Authorization</span>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Planned Skills</h2>
+      <table>
+        <tr><th>Skill</th><th>Description</th></tr>
+        <tr><td>ActivityPub</td><td>Federation, actors, inbox/outbox, activities</td></tr>
+        <tr><td>RDF</td><td>Turtle, JSON-LD, common vocabularies</td></tr>
+        <tr><td>Apps</td><td>Vanilla JS patterns for Solid apps</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Usage</h2>
+      <p>Point your AI coding assistant at the skill files. Copy them into your project, reference them in your prompt, or install via npm:</p>
+      <pre><code>const { protocol, solidOidc, solidos, webacl } = require('solidskills')
+
+// protocol  — full Solid Protocol reference
+// servers   — Solid server implementations and live instances
+// solidOidc — Solid-OIDC authentication
+// solidos   — SolidOS data browser and panes
+// webacl    — WebACL templates and rules</code></pre>
+      <p>Or simply copy the Markdown files into your project's context directory.</p>
+    </section>
+
   </div>
-</header>
 
-<main id="top">
-  <section class="hero wrap">
-    <span class="badge"><span class="pip"></span> LLM skills for the Solid ecosystem</span>
-    <h1>Ship Solid apps with<br /><span class="grad">skills your AI understands</span></h1>
-    <p class="lede">Drop-in, battle-tested skill files that teach your AI coding assistant the Solid ecosystem. Grounded in working code, not theory.</p>
-    <div class="cta-row">
-      <a class="btn btn-primary" href="#skills">
-        Browse skills
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a class="btn btn-ghost" href="https://github.com/solidskills/solidskills">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05A9.4 9.4 0 0 1 12 7.07c.85 0 1.71.12 2.51.34 1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.81c0 .27.18.59.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>
-        Star on GitHub
-      </a>
-    </div>
-    <div class="install">
-      <code><span class="sigil">$</span> npm install solidskills</code>
-      <button class="copy-btn" id="copyBtn" aria-label="Copy install command">Copy</button>
-    </div>
-  </section>
-
-  <section id="skills" class="section wrap">
-    <div class="section-head">
-      <div class="eyebrow">The Collection</div>
-      <h2>Five skills. One ecosystem.</h2>
-      <p>Each skill is a self-contained Markdown file packed with quick references, working snippets, and live instances — ready to paste into your assistant's context.</p>
-    </div>
-
-    <div class="grid">
-
-      <!-- Protocol -->
-      <a class="card" style="--c1:#6d4aff; --c2:#9b5cff;" href="https://github.com/solidskills/solidskills/blob/gh-pages/skills/protocol.md">
-        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg></span>
-        <h3>Solid Protocol</h3>
-        <p>Build on Solid pods with standard HTTP — LDP containers, WebID, content negotiation, and the full method matrix.</p>
-        <div class="tags"><span class="tag">HTTP</span><span class="tag">LDP</span><span class="tag">WebID</span><span class="tag">RDF</span></div>
-        <span class="read">Read skill <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </a>
-
-      <!-- Solid-OIDC -->
-      <a class="card" style="--c1:#0ea5e9; --c2:#6366f1;" href="https://github.com/solidskills/solidskills/blob/gh-pages/skills/solid-oidc.md">
-        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-        <h3>Solid-OIDC</h3>
-        <p>The complete browser auth flow — login, token refresh, logout, and DPoP-bound fetch. Zero dependencies, zero build step.</p>
-        <div class="tags"><span class="tag">Auth</span><span class="tag">DPoP</span><span class="tag">PKCE</span></div>
-        <span class="read">Read skill <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </a>
-
-      <!-- Servers -->
-      <a class="card" style="--c1:#10b981; --c2:#0ea5e9;" href="https://github.com/solidskills/solidskills/blob/gh-pages/skills/servers.md">
-        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="8" rx="2"/><rect x="2" y="13" width="20" height="8" rx="2"/><path d="M6 7h.01M6 17h.01"/></svg></span>
-        <h3>Solid Servers</h3>
-        <p>Choose, configure, and deploy a server — CSS, JSS, NSS, Pivot and more — plus public pod providers and live instances.</p>
-        <div class="tags"><span class="tag">CSS</span><span class="tag">JSS</span><span class="tag">Deploy</span></div>
-        <span class="read">Read skill <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </a>
-
-      <!-- SolidOS -->
-      <a class="card" style="--c1:#f59e0b; --c2:#ef4444;" href="https://github.com/solidskills/solidskills/blob/gh-pages/skills/solidos.md">
-        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>
-        <h3>SolidOS</h3>
-        <p>Build panes and extensions for the Solid data browser. Pane architecture, the package stack, and rdflib.js essentials.</p>
-        <div class="tags"><span class="tag">Panes</span><span class="tag">rdflib</span><span class="tag">UI</span></div>
-        <span class="read">Read skill <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </a>
-
-      <!-- WebACL -->
-      <a class="card" style="--c1:#ec4899; --c2:#8b5cf6;" href="https://github.com/solidskills/solidskills/blob/gh-pages/skills/webacl.md">
-        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span>
-        <h3>Web Access Control</h3>
-        <p>Generate valid <code>.acl</code> files in Turtle or JSON-LD. Who, what, and which — the full WAC authorization model.</p>
-        <div class="tags"><span class="tag">WAC</span><span class="tag">Turtle</span><span class="tag">JSON-LD</span></div>
-        <span class="read">Read skill <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </a>
-
-    </div>
-  </section>
-
-  <section class="section wrap">
-    <div class="features">
-      <div class="feature">
-        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-3 7h6l-3 7"/><path d="M5 14h2M17 14h2M9 21h6"/></svg></div>
-        <h4>Grounded in code</h4>
-        <p>Every claim is backed by a working snippet, real package version, or live instance — not hand-wavy theory.</p>
-      </div>
-      <div class="feature">
-        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></div>
-        <h4>Plain Markdown</h4>
-        <p>No framework, no lock-in. Point your assistant at the files or copy them straight into your project's context.</p>
-      </div>
-      <div class="feature">
-        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20 15.3 15.3 0 0 1 0-20"/></svg></div>
-        <h4>Open standards</h4>
-        <p>Built on the W3C Solid stack — your data, your pod, your rules. AGPL-3.0, free and open forever.</p>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <div class="wrap foot-inner">
-    <a class="brand" href="#top">
-      <span class="dot">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
-      </span>
-      solidskills
-    </a>
-    <div class="foot-links">
-      <a href="https://github.com/solidskills/solidskills">GitHub</a>
-      <a href="https://www.npmjs.com/package/solidskills">npm</a>
-      <a href="https://solidproject.org">Solid Project</a>
-    </div>
-    <div class="foot-note">LLM skills for the Solid ecosystem · AGPL-3.0-only · © <span id="yr">2026</span> Melvin Carvalho</div>
-  </div>
-</footer>
-
-<script>
-  (function () {
-    var btn = document.getElementById('copyBtn');
-    if (btn && navigator.clipboard) {
-      btn.addEventListener('click', function () {
-        navigator.clipboard.writeText('npm install solidskills').then(function () {
-          var prev = btn.textContent;
-          btn.textContent = 'Copied!';
-          setTimeout(function () { btn.textContent = prev; }, 1500);
-        });
-      });
-    }
-  })();
-</script>
+  <footer>
+    <a href="https://github.com/solidskills">solidskills</a> &middot;
+    AGPL-3.0 &middot;
+    &copy; 2026 Melvin Carvalho
+  </footer>
 </body>
 </html>
