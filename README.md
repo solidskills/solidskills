@@ -12,13 +12,30 @@ LLM skills for the Solid ecosystem. Grounded in working code, not theory.
 | [skills/solidos.md](skills/solidos.md) | SolidOS — data browser, pane architecture, rdflib.js |
 | [skills/webacl.md](skills/webacl.md) | Web Access Control — generate `.acl` files for Solid pods |
 
-## Install
+## Usage
 
+### As a Claude Code plugin
+
+Build the plugin structure, then point Claude Code at the output:
+
+```bash
+npm run build:plugin
+claude --plugin-dir ./dist
 ```
+
+Skills become available as `/solidskills:protocol`, `/solidskills:webacl`, etc.
+
+### As an npm package
+
+```bash
 npm install solidskills
 ```
 
-## Usage
+```js
+const { protocol, webacl, servers, solidOidc, solidos } = require('solidskills')
+```
+
+### Manual
 
 Point your AI coding assistant at the skill files, or copy them into your project's context.
 
