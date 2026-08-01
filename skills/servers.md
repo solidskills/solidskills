@@ -70,11 +70,11 @@ Public Solid pod providers where users can create accounts:
 |----------|-----|--------|-------------|
 | solidcommunity.net | https://solidcommunity.net | Pivot | Open |
 | solidweb.org | https://solidweb.org | NSS | Open |
-| solidweb.me | https://solidweb.me | NSS | Open |
+| solidweb.me | https://solidweb.me | CSS | Open |
 | solid.social | https://solid.social | NSS | Open |
 | inrupt.net | https://inrupt.net | ESS | Open |
 | use.id | https://use.id | ESS | Open |
-| teamid.live | https://teamid.live | ESS | Open |
+| teamid.live | https://teamid.live | Pivot | Open |
 | trinpod.us | https://trinpod.us | Trinpod | Open |
 | redpencil.io | https://solid.redpencil.io | CSS | Open |
 
